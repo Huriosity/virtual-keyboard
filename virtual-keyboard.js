@@ -113,7 +113,7 @@ const keyboard = {
   },
 
   clear() {
-    document.body.main.removeChild(this.elements.main);
+    document.body.removeChild(this.elements.main);
 },
 
   createKeys() {
