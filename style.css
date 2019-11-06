@@ -47,3 +47,8 @@
     animation-name: anime;
     animation-duration: 0.1s;
 }
+
+@keyframes anime {
+    from {border-radius: 100%;}
+    to {border-radius: 0%;}
+  }
