@@ -21,6 +21,10 @@ function checkWhithTable(subStr, table) {
   return '';
 }
 
+function removeChar(text) {
+  return text.slice(0, -1);
+}
+
 /* const keys = Object.keys(currentValues);
 const values = Object.values(currentValues);
 for (let i = 0; i < keys.length; i += 1) {
@@ -66,23 +70,23 @@ const rus_layout = {
 };
 
 const digit_analog = {
-  "48":")",
-  "49":"!",//1
-  "50":"\"",//2
-  "51":"#",//3
-  "52":"$",//4
-  "53":"%",//5
-  "54":"^",//6
-  "55":"&",//7
-  "56":"*",//8
-  "57":")",//9
+  '48':')',
+  '49':'!',//1
+  '50':'\\',//2
+  '51':'#',//3
+  '52':'$',//4
+  '53':'%',//5
+  '54':'^',//6
+  '55':'&',//7
+  '56':'*',//8
+  '57':')',//9
 };
 
 const arrows = {
-  "37" :"◄",//"37",
-  "38" :"▲",//"38",
-  "39" :"►",//"39",
-  "40" :"▼",//"40",
+  '37' :'◄',//'37',
+  '38' :'▲',//'38',
+  '39' :'►',//'39',
+  '40' :'▼',//'40',
 }
 
 const keyboard = {
@@ -109,7 +113,7 @@ const keyboard = {
   },
 
   clear() {
-    document.body.removeChild(this.elements.main);
+    document.body.main.removeChild(this.elements.main);
 },
 
   createKeys() {
@@ -135,6 +139,97 @@ const keyboard = {
       keyElement.setAttribute('type', 'button');
       keyElement.classList.add('keyboard__key');
       keyElement.textContent = key.toLowerCase();
+
+      keyElement.addEventListener('mousedown', () => {
+
+        for (let i = 0; i < dontWriteBtn.length; i += 1) {
+          if (keyElement.id == dontWriteBtn[i]) {
+            break;
+          }
+          if (i === dontWriteBtn.length - 1) {
+            if (capsBtn) {
+              if (shiftBtn) {
+                if (keyElement.id >= 48 && keyElement.id < 58) {
+                  document.getElementsByClassName('keyboard__output')[0].value += checkWhithTable(keyElement.id, digit_analog);
+                }
+                else {
+                  document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(keyElement.id.toString(10)).textContent;
+                }
+              } else {
+                document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(keyElement.id.toString(10)).textContent.toUpperCase();
+              }
+            } else {
+              if (shiftBtn) {
+                if (keyElement.id >= 48 && keyElement.id < 58 ) {
+                  document.getElementsByClassName('keyboard__output')[0].value += checkWhithTable(keyElement.id,digit_analog);
+                }
+                else{
+                  document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(keyElement.id.toString(10)).textContent.toUpperCase();
+                }
+              }
+              else{
+                document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(keyElement.id.toString(10)).textContent;
+              }
+            }
+            keyElement.classList.add('selected');
+          }
+        }
+        if (keyElement.id >= 37 && keyElement.id < 41 ) {
+          document.getElementsByClassName('keyboard__output')[0].value += checkWhithTable(keyElement.id, arrows);
+        }
+    
+        if (keyElement.id == 18) {
+          altbtn = true;
+        }
+    
+        if (keyElement.id == 16) {
+          shiftBtn = true;
+        }
+    
+        if (keyElement.id == 8) {
+          document.getElementsByClassName('keyboard__output')[0].value = removeChar(document.getElementsByClassName('keyboard__output')[0].value);
+        }
+
+        if (keyElement.id == 20) {
+          if (capsBtn) {
+            capsBtn = false;
+          } else {
+            capsBtn = true;
+          }
+        }
+
+        if (keyElement.id == 32) {
+          document.getElementsByClassName('keyboard__output')[0].value += ' ';
+        }
+  
+        if (keyElement.id == 13) {
+          document.getElementsByClassName('keyboard__output')[0].value += '\n';
+        }
+        if (keyElement.id == 9) {
+          document.getElementsByClassName('keyboard__output')[0].value += '\t';
+        }
+        keyElement.classList.add('selected');
+      });
+
+      keyElement.addEventListener('mouseup', () => {
+        keyElement.classList.remove('selected');
+    
+        if (keyElement.id == 18) {
+          altbtn = false;
+        }
+    
+        if (keyElement.i == 16) {
+          shiftBtn = false;
+        }
+    
+        if (keyElement.id == 16 && altbtn === true) {
+          english = !english;
+          localStorage.setItem('english', english);
+          keyboard.clear();
+          keyboard.init();
+        }
+      });
+      
 
       switch (key) {
         case '0':
@@ -344,7 +439,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     if (event.keyCode === 8) {
-      document.getElementsByClassName('keyboard__output')[0].value = _removeChar(document.getElementsByClassName('keyboard__output')[0].value);
+      document.getElementsByClassName('keyboard__output')[0].value = removeChar(document.getElementsByClassName('keyboard__output')[0].value);
     }
 
     if (event.keyCode === 20) {
