@@ -1,5 +1,11 @@
 let english = localStorage.getItem('english');
 
+let altbtn = false;
+let capsBtn = false;
+let shiftBtn = false;
+
+const dontWriteBtn = [8, 9, 13, 16, 17, 18, 20, 32, 37, 38, 39, 40, 46];
+
 if (english === null) {
   english = true;
 } else {
@@ -247,4 +253,28 @@ const keyboard = {
 
 window.addEventListener('DOMContentLoaded', () => {
   keyboard.init();
+
+  document.addEventListener ( 'keyup', () => {
+    document.getElementById(event.keyCode.toString(10)).classList.remove('selected');
+
+    if (event.keyCode === 18) {
+      altbtn = false;
+    }
+
+    if (event.keyCode === 16) {
+      shiftBtn = false;
+    }
+
+    if (event.keyCode === 16 && altbtn == true) {
+      english = !english;
+      localStorage.setItem('english', english);
+      keyboard.clear();
+      keyboard.init();
+    }
+  });
+
+  document.addEventListener ( 'keydown', () => {
+
+    document.getElementById(event.keyCode.toString(10)).classList.add('selected');
+  });
 });

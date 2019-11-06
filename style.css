@@ -41,3 +41,9 @@
 .key__left{
     margin-left: 25%;
 }
+
+.selected{
+    background: red;
+    animation-name: anime;
+    animation-duration: 0.1s;
+}
