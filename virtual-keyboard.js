@@ -65,6 +65,25 @@ const rus_layout = {
   '.': '/',
 };
 
+const digit_analog = {
+  "48":")",
+  "49":"!",//1
+  "50":"\"",//2
+  "51":"#",//3
+  "52":"$",//4
+  "53":"%",//5
+  "54":"^",//6
+  "55":"&",//7
+  "56":"*",//8
+  "57":")",//9
+};
+
+const arrows = {
+  "37" :"◄",//"37",
+  "38" :"▲",//"38",
+  "39" :"►",//"39",
+  "40" :"▼",//"40",
+}
 
 const keyboard = {
   elements: {
@@ -88,6 +107,10 @@ const keyboard = {
 
     document.body.appendChild(this.elements.main);
   },
+
+  clear() {
+    document.body.removeChild(this.elements.main);
+},
 
   createKeys() {
     const fragment = document.createDocumentFragment();
@@ -265,7 +288,7 @@ window.addEventListener('DOMContentLoaded', () => {
       shiftBtn = false;
     }
 
-    if (event.keyCode === 16 && altbtn == true) {
+    if (event.keyCode === 16 && altbtn === true) {
       english = !english;
       localStorage.setItem('english', english);
       keyboard.clear();
@@ -276,5 +299,74 @@ window.addEventListener('DOMContentLoaded', () => {
   document.addEventListener ( 'keydown', () => {
 
     document.getElementById(event.keyCode.toString(10)).classList.add('selected');
+    for (let i = 0; i < dontWriteBtn.length; i += 1) {
+      if (event.keyCode === dontWriteBtn[i]) {
+        break;
+      }
+      if (i === dontWriteBtn.length - 1) {
+        if (capsBtn) {
+          if (shiftBtn) {
+            if (event.keyCode >= 48 && event.keyCode < 58) {
+              document.getElementsByClassName('keyboard__output')[0].value += checkWhithTable(event.keyCode, digit_analog);
+            }
+            else {
+              document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(event.keyCode.toString(10)).textContent;
+            }
+          } else {
+            document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(event.keyCode.toString(10)).textContent.toUpperCase();
+          }
+        } else {
+          if (shiftBtn) {
+            if (event.keyCode >= 48 && event.keyCode < 58 ) {
+              document.getElementsByClassName('keyboard__output')[0].value += checkWhithTable(event.keyCode,digit_analog);
+            }
+            else{
+              document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(event.keyCode.toString(10)).textContent.toUpperCase();
+            }
+          }
+          else{
+            document.getElementsByClassName('keyboard__output')[0].value += document.getElementById(event.keyCode.toString(10)).textContent;
+          }
+        }
+      }
+    }
+
+    if (event.keyCode >= 37 && event.keyCode < 41 ) {
+      document.getElementsByClassName('keyboard__output')[0].value += checkWhithTable(event.keyCode, arrows);
+    }
+
+    if (event.keyCode === 18) {
+      altbtn = true;
+    }
+
+    if (event.keyCode === 16) {
+      shiftBtn = true;
+    }
+
+    if (event.keyCode === 8) {
+      document.getElementsByClassName('keyboard__output')[0].value = _removeChar(document.getElementsByClassName('keyboard__output')[0].value);
+    }
+
+    if (event.keyCode === 20) {
+      if(capsBtn) {
+        capsBtn = false;
+      }
+      else {
+        capsBtn = true;
+      }
+                
+    }
+
+    if (event.keyCode === 32) {
+      document.getElementsByClassName('keyboard__output')[0].value += ' ';
+    }
+            
+    if (event.keyCode === 13) {
+      document.getElementsByClassName('keyboard__output')[0].value += '\n';
+    }
+
+    if (event.keyCode === 9) {
+      document.getElementsByClassName('keyboard__output')[0].value += '\t';
+    }
   });
 });
